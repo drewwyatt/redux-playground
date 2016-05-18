@@ -3,7 +3,7 @@ var CommonsChunkPlugin = require('webpack').optimize.CommonsChunkPlugin;
 module.exports = {
     context: __dirname,
     entry: {
-        'counter': './src/counter/index.ts'
+        'counter': './src/counter/index.tsx'
     },
     output: {
         path: __dirname + '/bin',
@@ -13,14 +13,14 @@ module.exports = {
     },
     module: {
         loaders: [
-            {test: /\.ts$/, loader: 'ts-loader'}
+            {test: /\.tsx?$/, loader: 'ts-loader'}
         ]
     },
     resolve: {
-        extensions: ['','.ts','.js','.json']
+        extensions: ['', '.ts', '.tsx','.js','.json']
     },
     plugins: [
-        new HtmlWebpackPlugin()
+        new HtmlWebpackPlugin({ template: 'src/index.html' })
     ],
     devServer: {
         port: 3000,

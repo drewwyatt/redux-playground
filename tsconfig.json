@@ -7,11 +7,13 @@
         "sourceMap": true,
         "outDir": "bin",
         "noImplicitAny": true,
-        "moduleResolution": "node"
+        "moduleResolution": "node",
+        "jsx": "react"
     },
     "exclude": [
         "node_modules",
-        "typings"
+        "typings",
+        "bin"
     ],
     "filesGlob": [
         "./src/**/*.ts"
