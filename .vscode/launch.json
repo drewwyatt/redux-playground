@@ -2,9 +2,9 @@
     "version": "0.1.0",
     "configurations": [
         {
-            "name": "Launch type",
+            "name": "Counter",
             "type": "node",
-            "program": "${workspaceRoot}/src/index.ts",
+            "program": "${workspaceRoot}/src/counter/index.ts",
             "stopOnEntry": false,
             "sourceMaps": true,
             "outDir": "${workspaceRoot}/bin"
