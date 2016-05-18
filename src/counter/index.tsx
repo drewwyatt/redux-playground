@@ -38,9 +38,8 @@ interface CounterProps {
 }
 
 class Counter extends React.Component<CounterProps, number> {
-    constructor(props: CounterProps, state: number) {
+    constructor(props: CounterProps, state: any) {
         super(props, state);
-        console.log(props, state);
     }
     
     render() {
