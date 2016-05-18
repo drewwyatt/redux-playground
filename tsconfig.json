@@ -1,0 +1,24 @@
+{
+    "compilerOptions": {
+        "target": "es5",
+        "module": "amd",
+        "declaration": true,
+        "removeComments": true,
+        "sourceMap": true,
+        "outDir": "bin",
+        "noImplicitAny": true,
+        "moduleResolution": "node"
+    },
+    "exclude": [
+        "node_modules",
+        "typings"
+    ],
+    "filesGlob": [
+        "src/**/*.ts"
+    ],
+    "compileOnSave": true,
+    "buildOnSave": true,
+    "atom": {
+        "rewriteTsconfig": false
+    }
+}
