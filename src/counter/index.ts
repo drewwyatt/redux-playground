@@ -22,40 +22,16 @@ function counter(state: number, action: Action): number {
     return newState;
 }
 
-function notify(): void {
-    console.log(store.getState());
-}
-
-function increment(): void {
-    store.dispatch({ type: CounterAction.INCREMENT });
-}
-
-function decrement(): void {
-    store.dispatch({ type: CounterAction.DECREMENT });
-}
 
 const store = createStore(counter);
-store.subscribe(notify);
 
-increment();
-increment();
-increment();
-decrement();
-decrement();
-decrement();
-decrement();
-decrement();
-increment();
+function render(): void {
+    document.body.innerText = store.getState().toString();
+}
 
+store.subscribe(render);
+render();
 
-
-// function render(): void {
-//     document.body.innerText = store.getState().toString();
-// }
-
-// store.subscribe(render);
-// render();
-
-// document.addEventListener('click', () => {
-//     store.dispatch({ type: CounterAction });
-// });
+document.addEventListener('click', () => {
+    store.dispatch({ type: CounterAction.INCREMENT });
+});
