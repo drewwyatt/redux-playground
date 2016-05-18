@@ -1,4 +1,8 @@
+/// <reference path="../../typings/main.d.ts" />
+
 import {createStore, Action} from 'redux';
+import {render} from 'react-dom';
+
 
 const CounterAction = {
     INCREMENT: 'INCREMENT',
@@ -25,12 +29,12 @@ function counter(state: number, action: Action): number {
 
 const store = createStore(counter);
 
-function render(): void {
+function rrender(): void {
     document.body.innerText = store.getState().toString();
 }
 
-store.subscribe(render);
-render();
+store.subscribe(rrender);
+// render();
 
 document.addEventListener('click', () => {
     store.dispatch({ type: CounterAction.INCREMENT });
