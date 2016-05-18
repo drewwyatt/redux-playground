@@ -14,10 +14,10 @@
         "typings"
     ],
     "filesGlob": [
-        "src/**/*.ts"
+        "./src/**/*.ts"
     ],
-    "compileOnSave": true,
-    "buildOnSave": true,
+    "compileOnSave": false,
+    "buildOnSave": false,
     "atom": {
         "rewriteTsconfig": false
     }
