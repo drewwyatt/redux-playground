@@ -93,6 +93,7 @@ class Counters extends React.Component<CountersProps, any> {
         values.forEach((value, index) => 
             counters.push(
                 <Counter 
+                    key={index}
                     value={value} 
                     onIncrement={() => store.dispatch({type: CounterActionType.INCREMENT, index: index})} 
                     onDecrement={() => store.dispatch({type: CounterActionType.DECREMENT, index: index})} />
