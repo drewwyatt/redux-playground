@@ -68,10 +68,6 @@ interface CounterProps {
 }
 
 class Counter extends React.Component<CounterProps, any> {
-    constructor(props: CounterProps, state: any) {
-        super(props, state);
-    }
-    
     render(): React.ReactElement<Counter> {
         const {value, onIncrement, onDecrement} = this.props;
         return (
@@ -91,10 +87,6 @@ interface CountersProps {
 }
 
 class Counters extends React.Component<CountersProps, any> {
-    constructor(props: CountersProps, state: any) {
-        super(props, state);
-    }
-    
     render(): React.ReactElement<Counters> {
         const {values, addCounter, removeCounter} = this.props;
         let counters: React.ReactElement<Counter>[] = [];
