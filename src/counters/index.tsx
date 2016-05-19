@@ -103,6 +103,7 @@ class Counters extends React.Component<CountersProps, any> {
         return (
             <div>
                 <div>{counters}</div>
+                <hr />
                 <button onClick={removeCounter}>Remove Counter</button>
                 <button onClick={addCounter}>Add Counter</button>
             </div>
