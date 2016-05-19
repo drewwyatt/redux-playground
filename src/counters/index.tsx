@@ -13,7 +13,7 @@ const CounterActionType = {
 }
 
 interface CounterAction extends Action {
-    index: number;
+    index?: number;
 }
 
 function addCounter(list: number[]): number[] {
