@@ -1,17 +1,15 @@
-/// <reference path="../../typings/main.d.ts" />
+/// <reference path="../../typings/index.d.ts" />
 
 import {createStore, Action} from 'redux';
 import * as React from 'react';
 import * as ReactDom from 'react-dom';
-
 
 const CounterAction = {
     INCREMENT: 'INCREMENT',
     DECREMENT: 'DECREMENT'
 }
 
-// function counter(state: number, action: any): number {
-function counter(state:number, action: any): number {
+function counter(state: number, action: any): number {
     let newState: number;
     switch(action.type) {
         case 'INCREMENT':
@@ -27,7 +25,6 @@ function counter(state:number, action: any): number {
     
     return newState;
 }
-
 
 const store = createStore(counter);
 
@@ -58,12 +55,8 @@ function render() {
     ReactDom.render(
         <Counter 
             value={store.getState()} 
-            onIncrement={() => {
-                store.dispatch({type: CounterAction.INCREMENT})
-            }}
-            onDecrement={() => {
-                store.dispatch({type: CounterAction.DECREMENT})
-            }} />,
+            onIncrement={() => store.dispatch({type: CounterAction.INCREMENT})}
+            onDecrement={() => store.dispatch({type: CounterAction.DECREMENT})} />,
         document.getElementById('root')
     );
 }
