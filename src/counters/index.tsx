@@ -63,8 +63,8 @@ const store = createStore(counters);
 
 interface CounterProps {
     value: number;
-    // onIncrement(): void;
-    // onDecrement(): void;
+    onIncrement(): void;
+    onDecrement(): void;
 }
 
 class Counter extends React.Component<CounterProps, any> {
@@ -73,12 +73,12 @@ class Counter extends React.Component<CounterProps, any> {
     }
     
     render(): React.ReactElement<Counter> {
-        const {value} = this.props;
+        const {value, onIncrement, onDecrement} = this.props;
         return (
             <div>
                 <h1>{value}</h1>
-                <button>-</button>
-                <button>+</button>
+                <button onClick={onDecrement}>-</button>
+                <button onClick={onIncrement}>+</button>
             </div>
         );
     }
@@ -98,7 +98,14 @@ class Counters extends React.Component<CountersProps, any> {
     render(): React.ReactElement<Counters> {
         const {values, addCounter, removeCounter} = this.props;
         let counters: React.ReactElement<Counter>[] = [];
-        values.forEach(value => counters.push(<Counter value={value} />));
+        values.forEach((value, index) => 
+            counters.push(
+                <Counter 
+                    value={value} 
+                    onIncrement={() => store.dispatch({type: CounterActionType.INCREMENT, index: index})} 
+                    onDecrement={() => store.dispatch({type: CounterActionType.DECREMENT, index: index})} />
+            )
+        );
         
         return (
             <div>
