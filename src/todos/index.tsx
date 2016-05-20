@@ -73,6 +73,35 @@ const todoApp = combineReducers({
     visibilityFilter
 });
 
+const Todo = ({ onClick, completed, text }): JSX.Element => {
+    return (
+        <li
+            onClick={onClick}
+            style={{
+                textDecoration:
+                completed ? 'line-through' : 'none'
+            }}>{text}</li>
+    );
+}
+
+interface TodoListProps {
+    todos: Todo[];
+    onTodoClick(todoID: number): void;
+}
+const TodoList = ({ todos, onTodoClick}: TodoListProps): JSX.Element => {
+    return (
+        <ul>
+            {todos.map(todo =>
+                <Todo
+                    key={todo.id}
+                    completed={todo.completed}
+                    text={todo.text}
+                    onClick={() => onTodoClick(todo.id)} />
+            )}
+        </ul>
+    );
+};
+
 const FilterLink = ({ filter, currentFilter, children }): any => {
     if (filter === currentFilter) {
         return <span>{children}</span>
@@ -123,21 +152,9 @@ class TodoApp extends React.Component<{ todos: Todo[], visibilityFilter: string 
                 } }>
                     Add Todo
                 </button>
-                <ul>
-                    {visibleTodos.map(todo =>
-                        <li key={todo.id}
-                            onClick={() => {
-                                store.dispatch({
-                                    type: TodoActionType.TOGGLE_TODO,
-                                    id: todo.id
-                                })
-                            } }
-                            style={{
-                                textDecoration:
-                                todo.completed ? 'line-through' : 'none'
-                            }}>{todo.text}</li>
-                    ) }
-                </ul>
+                <TodoList
+                    todos={visibleTodos}
+                    onTodoClick={(id: number) => store.dispatch({ type: TodoActionType.TOGGLE_TODO, id: id })} />
                 <p>
                     Show:
                     {' '}
