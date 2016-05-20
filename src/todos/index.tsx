@@ -1,4 +1,5 @@
-import * as deepFreeze from 'deep-freeze';
+import * as React from 'react';
+import * as ReactDOM from 'react-dom';
 import {createStore, combineReducers, Action} from 'redux';
 
 const TodoActionType = {
@@ -79,13 +80,44 @@ const todoApp = combineReducers({
     visibilityFilter
 });
 
+class TodoApp extends React.Component<{todos: Todo[]}, void> {
+    private _input: HTMLInputElement;
+    private _nextTodoID: number = 0;
+    
+    render() {
+        return(
+            <div>
+                <input ref={node => {
+                    this._input = node;
+                }} />
+                <button onClick={() => {
+                    store.dispatch({
+                        type: TodoActionType.ADD_TODO,
+                        text: this._input.value,
+                        id: this._nextTodoID++
+                    })
+                }}> 
+                    Add Todo
+                </button>
+                <ul>
+                    {this.props.todos.map(todo => 
+                        <li key={todo.id}>{todo.text}</li>
+                    )}
+                </ul>
+            </div>
+        );
+    }
+}
+
+const render = () => {
+    const state: AppState = store.getState();
+   ReactDOM.render(
+       <TodoApp 
+            todos={state.todos} 
+        />,
+        document.getElementById('todos'));
+}
+
 const store = createStore(todoApp);
-store.subscribe(() => console.log(store.getState()));
-
-store.dispatch({ type: TodoActionType.ADD_TODO, id: 0, text: "foo" });
-store.dispatch({ type: TodoActionType.ADD_TODO, id: 1, text: "bar" });
-store.dispatch({ type: TodoActionType.ADD_TODO, id: 1, text: "baz" });
-
-store.dispatch({type: TodoActionType.TOGGLE_TODO, id: 1});
-
-store.dispatch({type: TodoActionType.SET_VISIBILITY_FILTER, filter: "boom boom pow" });
+store.subscribe(render);
+render();
