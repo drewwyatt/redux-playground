@@ -167,25 +167,24 @@ const Footer = ({visibilityFilter, onFilterClick}: FooterProps): JSX.Element => 
     );
 }
 
-class TodoApp extends React.Component<{ todos: Todo[], visibilityFilter: string }, void> {
-    private _nextTodoID: number = 0;
-
-    render() {
-        const { todos, visibilityFilter } = this.props;
-        const visibleTodos = getVisibleTodos(todos, visibilityFilter);
-        return (
-            <div>
-                <AddTodo
-                    onAddClick={text => store.dispatch({ type: TodoActionType.ADD_TODO, id: this._nextTodoID++, text: text }) } />
-                <TodoList
-                    todos={visibleTodos}
-                    onTodoClick={(id: number) => store.dispatch({ type: TodoActionType.TOGGLE_TODO, id: id }) } />
-                <Footer
-                    visibilityFilter={visibilityFilter}
-                    onFilterClick={filter => store.dispatch({ type: TodoActionType.SET_VISIBILITY_FILTER, filter: filter })} />
-            </div>
-        );
-    }
+interface TodoAppProps {
+    todos: Todo[],
+    visibilityFilter: string
+}
+let nextTodoID = 0;
+const TodoApp = ({todos, visibilityFilter}: TodoAppProps): JSX.Element => {
+    return (
+        <div>
+            <AddTodo
+                onAddClick={text => store.dispatch({ type: TodoActionType.ADD_TODO, id: nextTodoID++, text: text }) } />
+            <TodoList
+                todos={getVisibleTodos(todos, visibilityFilter)}
+                onTodoClick={(id: number) => store.dispatch({ type: TodoActionType.TOGGLE_TODO, id: id }) } />
+            <Footer
+                visibilityFilter={visibilityFilter}
+                onFilterClick={filter => store.dispatch({ type: TodoActionType.SET_VISIBILITY_FILTER, filter: filter })} />
+        </div>
+    );
 }
 
 const render = () => {
