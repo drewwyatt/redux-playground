@@ -96,8 +96,8 @@ const TodoList = ({ todos, onTodoClick}: TodoListProps): JSX.Element => {
                     key={todo.id}
                     completed={todo.completed}
                     text={todo.text}
-                    onClick={() => onTodoClick(todo.id)} />
-            )}
+                    onClick={() => onTodoClick(todo.id) } />
+            ) }
         </ul>
     );
 };
@@ -120,6 +120,24 @@ const FilterLink = ({ filter, currentFilter, children }): any => {
     }
 }
 
+interface AddTodoProps {
+    onAddClick(text: string): void; 
+}
+const AddTodo = ({onAddClick}: AddTodoProps): JSX.Element => {
+    let input: HTMLInputElement;
+    return (
+        <div>
+            <input ref={ node => input = node } />
+            <button onClick={() => {
+                onAddClick(input.value);
+                input.value='';
+            }}>
+                Add Todo
+            </button>
+        </div>
+    );
+}
+
 const getVisibleTodos = (todos: Todo[], filter: string): Todo[] => {
     switch (filter) {
         case 'SHOW_ACTIVE':
@@ -132,7 +150,6 @@ const getVisibleTodos = (todos: Todo[], filter: string): Todo[] => {
 }
 
 class TodoApp extends React.Component<{ todos: Todo[], visibilityFilter: string }, void> {
-    private _input: HTMLInputElement;
     private _nextTodoID: number = 0;
 
     render() {
@@ -140,21 +157,11 @@ class TodoApp extends React.Component<{ todos: Todo[], visibilityFilter: string 
         const visibleTodos = getVisibleTodos(todos, visibilityFilter);
         return (
             <div>
-                <input ref={node => {
-                    this._input = node;
-                } } />
-                <button onClick={() => {
-                    store.dispatch({
-                        type: TodoActionType.ADD_TODO,
-                        text: this._input.value,
-                        id: this._nextTodoID++
-                    })
-                } }>
-                    Add Todo
-                </button>
+                <AddTodo
+                    onAddClick={text => store.dispatch({ type: TodoActionType.ADD_TODO, id: this._nextTodoID++, text: text })} />
                 <TodoList
                     todos={visibleTodos}
-                    onTodoClick={(id: number) => store.dispatch({ type: TodoActionType.TOGGLE_TODO, id: id })} />
+                    onTodoClick={(id: number) => store.dispatch({ type: TodoActionType.TOGGLE_TODO, id: id }) } />
                 <p>
                     Show:
                     {' '}
