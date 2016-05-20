@@ -1,5 +1,5 @@
 import * as deepFreeze from 'deep-freeze';
-import {createStore, Action} from 'redux';
+import {createStore, combineReducers, Action} from 'redux';
 
 const TodoActionType = {
     ADD_TODO: 'ADD_TODO',
@@ -58,7 +58,7 @@ const todos = (state: Todo[] = [], action: TodoAction): Todo[] => {
     }
 };
 
-const visibilityFilter = (state: any, action: TodoAction): any => {
+const visibilityFilter = (state: string = '', action: TodoAction): any => {
     switch(action.type) {
         case TodoActionType.SET_VISIBILITY_FILTER:
             return action.filter;
@@ -67,12 +67,17 @@ const visibilityFilter = (state: any, action: TodoAction): any => {
     }
 }
 
-const todoApp = (state: AppState = {}, action: TodoAction): AppState => {
-    return {
-        todos: todos(state.todos, action),
-        visibilityFilter: visibilityFilter(state.visibilityFilter, action)
-    };
-}
+// const todoApp = (state: AppState = {}, action: TodoAction): AppState => {
+//     return {
+//         todos: todos(state.todos, action),
+//         visibilityFilter: visibilityFilter(state.visibilityFilter, action)
+//     };
+// }
+
+const todoApp = combineReducers({
+    todos,
+    visibilityFilter
+});
 
 const store = createStore(todoApp);
 store.subscribe(() => console.log(store.getState()));
