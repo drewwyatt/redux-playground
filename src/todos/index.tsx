@@ -18,29 +18,35 @@ interface Todo {
     completed: boolean;
 }
 
-const todos = (state: Todo[] = [], action: TodoAction) => {
-    switch(action.type) {
+const todo = (state: Todo, action: TodoAction): Todo => {
+    switch (action.type) {
+        case: TodoActionType.ADD_TODO:
+            return {
+                id: action.id,
+                text: action.text,
+                completed: false
+            };
+        case: TodoActionType.TOGGLE_TODO:
+            if (state.id !== action.id) {
+                return state;
+            } else {
+                return {
+                    id: state.id,
+                    text: state.text,
+                    completed: !state.completed
+                };
+            }
+        default:
+            return state;
+    }
+}
+
+const todos = (state: Todo[] = [], action: TodoAction): Todo[] => {
+    switch (action.type) {
         case TodoActionType.ADD_TODO:
-            return [
-                ...state,
-                {
-                    id: action.id,
-                    text: action.text,
-                    completed: false
-                }
-            ];
+            return [...state, todo(undefined, action)];
         case TodoActionType.TOGGLE_TODO:
-            return state.map(todo => {
-                if(todo.id !== action.id) {
-                    return todo;
-                } else {
-                    return {
-                      id: todo.id,
-                      text: todo.text,
-                      completed: !todo.completed  
-                    };
-                }
-            })
+            return state.map(t => todo(t, action));
         default:
             return [];
     }
@@ -53,19 +59,19 @@ const testAddTodo = () => {
         id: 0,
         text: 'Learn Redux'
     };
-    
+
     const stateAfter = [{
         id: 0,
         text: 'Learn Redux',
         completed: false
     }];
-    
+
     deepFreeze(stateBefore);
     deepFreeze(action);
-    
+
     expect(
         todos(stateBefore, action)
-    ).toEqual(stateAfter);    
+    ).toEqual(stateAfter);
 };
 
 const testToggleTodo = () => {
@@ -80,13 +86,13 @@ const testToggleTodo = () => {
             text: 'Go Shopping',
             completed: false
         }
-    ];  
-    
+    ];
+
     const action: TodoAction = {
         id: 1,
         type: TodoActionType.TOGGLE_TODO
     }
-    
+
     const stateAfter: Todo[] = [
         {
             id: 0,
@@ -98,11 +104,11 @@ const testToggleTodo = () => {
             text: 'Go Shopping',
             completed: true
         }
-    ];  
-    
+    ];
+
     deepFreeze(stateBefore);
     deepFreeze(action);
-    
+
     expect(
         todos(stateBefore, action)
     ).toEqual(stateAfter);
