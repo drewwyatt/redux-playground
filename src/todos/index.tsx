@@ -1,32 +1,38 @@
-import * as expect from 'expect';
 import * as deepFreeze from 'deep-freeze';
-import {Action} from 'redux';
+import {createStore, Action} from 'redux';
 
 const TodoActionType = {
     ADD_TODO: 'ADD_TODO',
-    TOGGLE_TODO: 'TOGGLE_TODO'
+    TOGGLE_TODO: 'TOGGLE_TODO',
+    SET_VISIBILITY_FILTER: 'SET_VISIBILITY_FILTER'
 };
 
 interface TodoAction extends Action {
     id: number;
     text?: string;
-}
+    filter?: string;
+};
 
 interface Todo {
     id: number;
     text: string;
     completed: boolean;
-}
+};
+
+interface AppState {
+    todos?: Todo[];
+    visibilityFilter?: string;
+};
 
 const todo = (state: Todo, action: TodoAction): Todo => {
     switch (action.type) {
-        case: TodoActionType.ADD_TODO:
+        case TodoActionType.ADD_TODO:
             return {
                 id: action.id,
                 text: action.text,
                 completed: false
             };
-        case: TodoActionType.TOGGLE_TODO:
+        case TodoActionType.TOGGLE_TODO:
             if (state.id !== action.id) {
                 return state;
             } else {
@@ -48,72 +54,33 @@ const todos = (state: Todo[] = [], action: TodoAction): Todo[] => {
         case TodoActionType.TOGGLE_TODO:
             return state.map(t => todo(t, action));
         default:
-            return [];
+            return state;
     }
 };
 
-const testAddTodo = () => {
-    const stateBefore: Todo[] = [];
-    const action: TodoAction = {
-        type: TodoActionType.ADD_TODO,
-        id: 0,
-        text: 'Learn Redux'
+const visibilityFilter = (state: any, action: TodoAction): any => {
+    switch(action.type) {
+        case TodoActionType.SET_VISIBILITY_FILTER:
+            return action.filter;
+        default:
+            return state;
+    }
+}
+
+const todoApp = (state: AppState = {}, action: TodoAction): AppState => {
+    return {
+        todos: todos(state.todos, action),
+        visibilityFilter: visibilityFilter(state.visibilityFilter, action)
     };
+}
 
-    const stateAfter = [{
-        id: 0,
-        text: 'Learn Redux',
-        completed: false
-    }];
+const store = createStore(todoApp);
+store.subscribe(() => console.log(store.getState()));
 
-    deepFreeze(stateBefore);
-    deepFreeze(action);
+store.dispatch({ type: TodoActionType.ADD_TODO, id: 0, text: "foo" });
+store.dispatch({ type: TodoActionType.ADD_TODO, id: 1, text: "bar" });
+store.dispatch({ type: TodoActionType.ADD_TODO, id: 1, text: "baz" });
 
-    expect(
-        todos(stateBefore, action)
-    ).toEqual(stateAfter);
-};
+store.dispatch({type: TodoActionType.TOGGLE_TODO, id: 1});
 
-const testToggleTodo = () => {
-    const stateBefore: Todo[] = [
-        {
-            id: 0,
-            text: 'Learn Redux',
-            completed: false
-        },
-        {
-            id: 1,
-            text: 'Go Shopping',
-            completed: false
-        }
-    ];
-
-    const action: TodoAction = {
-        id: 1,
-        type: TodoActionType.TOGGLE_TODO
-    }
-
-    const stateAfter: Todo[] = [
-        {
-            id: 0,
-            text: 'Learn Redux',
-            completed: false
-        },
-        {
-            id: 1,
-            text: 'Go Shopping',
-            completed: true
-        }
-    ];
-
-    deepFreeze(stateBefore);
-    deepFreeze(action);
-
-    expect(
-        todos(stateBefore, action)
-    ).toEqual(stateAfter);
-};
-
-testAddTodo();
-testToggleTodo()
-console.log('All tests passed');
+store.dispatch({type: TodoActionType.SET_VISIBILITY_FILTER, filter: "boom boom pow" });
