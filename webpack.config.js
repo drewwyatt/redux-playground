@@ -3,6 +3,7 @@ var CommonsChunkPlugin = require('webpack').optimize.CommonsChunkPlugin;
 module.exports = {
     context: __dirname,
     entry: {
+        'tests': 'expect',
         'vendor': [
             'react',
             'react-dom',
@@ -10,7 +11,8 @@ module.exports = {
             'deep-freeze'
         ],
         'counter': './src/counter/index.tsx',
-        'counters': './src/counters/index.tsx'
+        'counters': './src/counters/index.tsx',
+        'todos': './src/todos/index.tsx'
     },
     output: {
         path: __dirname + '/bin',
