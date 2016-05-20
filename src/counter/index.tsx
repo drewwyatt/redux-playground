@@ -57,7 +57,7 @@ function render() {
             value={store.getState()} 
             onIncrement={() => store.dispatch({type: CounterAction.INCREMENT})}
             onDecrement={() => store.dispatch({type: CounterAction.DECREMENT})} />,
-        document.getElementById('root')
+        document.getElementById('counter')
     );
 }
 

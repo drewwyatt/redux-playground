@@ -3,7 +3,14 @@ var CommonsChunkPlugin = require('webpack').optimize.CommonsChunkPlugin;
 module.exports = {
     context: __dirname,
     entry: {
-        'counter': './src/counters/index.tsx'
+        'vendor': [
+            'react',
+            'react-dom',
+            'redux',
+            'deep-freeze'
+        ],
+        'counter': './src/counter/index.tsx',
+        'counters': './src/counters/index.tsx'
     },
     output: {
         path: __dirname + '/bin',
@@ -20,6 +27,7 @@ module.exports = {
         extensions: ['', '.ts', '.tsx','.js','.json']
     },
     plugins: [
+        new CommonsChunkPlugin("vendor", "vendor.bundle.js", Infinity),
         new HtmlWebpackPlugin({ template: 'src/index.html' })
     ],
     devServer: {
