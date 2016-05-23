@@ -102,6 +102,28 @@ const TodoList = ({ todos, onTodoClick}: TodoListProps): JSX.Element => {
 	);
 };
 
+class VisibileTodoList extends React.Component<void, void> {
+	private _unsubscribe: () => void;
+	
+	componentDidMount(): void {
+		this._unsubscribe = store.subscribe(() => this.forceUpdate());
+	}
+	
+	componentWillUnmount(): void {
+		this._unsubscribe();
+	}
+	
+	render() {
+		const state = store.getState() as TodoAppProps;
+		
+		return (
+			<TodoList 
+				todos={getVisibleTodos(state.todos, state.visibilityFilter)}
+				onTodoClick={id => store.dispatch({type: TodoActionType.TOGGLE_TODO, id})} />
+		);
+	}
+}
+
 interface LinkProps {
 	active: any;
 	children: any;
@@ -200,9 +222,7 @@ const TodoApp = ({todos, visibilityFilter}: TodoAppProps): JSX.Element => {
 		<div>
 			<AddTodo
 				onAddClick={text => store.dispatch({ type: TodoActionType.ADD_TODO, id: nextTodoID++, text: text }) } />
-			<TodoList
-				todos={getVisibleTodos(todos, visibilityFilter) }
-				onTodoClick={(id: number) => store.dispatch({ type: TodoActionType.TOGGLE_TODO, id: id }) } />
+			<VisibileTodoList />
 			<Footer />
 		</div>
 	);
