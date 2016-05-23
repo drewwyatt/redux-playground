@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import {createStore, combineReducers, Action} from 'redux';
+import {createStore, combineReducers, Action, Store} from 'redux';
 
 const TodoActionType = {
 	ADD_TODO: 'ADD_TODO',
@@ -107,10 +107,11 @@ const TodoList = ({ todos, onTodoClick}: TodoListProps): JSX.Element => {
 	);
 };
 
-class VisibileTodoList extends React.Component<void, void> {
+class VisibileTodoList extends React.Component<TodoAppProps, void> {
 	private _unsubscribe: () => void;
 	
 	componentDidMount(): void {
+		const { store } = this.props;
 		this._unsubscribe = store.subscribe(() => this.forceUpdate());
 	}
 	
@@ -119,6 +120,7 @@ class VisibileTodoList extends React.Component<void, void> {
 	}
 	
 	render() {
+		const { store } = this.props;
 		const state = store.getState() as TodoAppState;
 		
 		return (
@@ -151,11 +153,13 @@ const Link = ({ active, children, onClick }): any => {
 
 interface FilterLinkProps {
 	filter: string;
+	store: Store<TodoAppState>;
 };
 class FilterLink extends React.Component<FilterLinkProps, void> {
 	private _unsubscribe: () => void;
 	
 	componentDidMount(): void {
+		const { store } = this.props;
 		this._unsubscribe = store.subscribe(() => this.forceUpdate());
 	}
 	
@@ -164,19 +168,19 @@ class FilterLink extends React.Component<FilterLinkProps, void> {
 	}
 	
 	render(): JSX.Element {
-		const props = this.props;
+		const { children, filter, store } = this.props;
 		const state: TodoAppState = store.getState() as TodoAppState;
 		
 		return (
-			<Link active={props.filter === state.visibilityFilter} onClick={() => store.dispatch({type: TodoActionType.SET_VISIBILITY_FILTER, filter: props.filter})}>
-				{props.children}
+			<Link active={filter === state.visibilityFilter} onClick={() => store.dispatch({type: TodoActionType.SET_VISIBILITY_FILTER, filter })}>
+				{children}
 			</Link>
 		);
 	}
 }
 
 let nextTodoID = 0;
-const AddTodo = (): JSX.Element => {
+const AddTodo = ({store}: TodoAppProps): JSX.Element => {
 	let input: HTMLInputElement;
 	return (
 		<div>
@@ -201,37 +205,37 @@ const getVisibleTodos = (todos: Todo[], filter: string): Todo[] => {
 			return todos;
 	}
 }
-const Footer = (): JSX.Element => {
+const Footer = ({store}: TodoAppProps): JSX.Element => {
 	return (
 		<p>
 			Show:
 			{' '}
-			<FilterLink filter='SHOW_ALL'>All</FilterLink>
+			<FilterLink filter='SHOW_ALL' store={store}>All</FilterLink>
 			{' '}
-			<FilterLink filter='SHOW_ACTIVE'>Active</FilterLink>
+			<FilterLink filter='SHOW_ACTIVE' store={store}>Active</FilterLink>
 			{' '}
-			<FilterLink filter='SHOW_COMPLETED'>Completed</FilterLink>
+			<FilterLink filter='SHOW_COMPLETED' store={store}>Completed</FilterLink>
 		</p>
 	);
 }
 
-const TodoApp = (): JSX.Element => {
+interface TodoAppProps {
+	store: Store<TodoAppState>;
+}
+const TodoApp = ({store}: TodoAppProps): JSX.Element => {
 	return (
 		<div>
-			<AddTodo />
-			<VisibileTodoList />
-			<Footer />
+			<AddTodo store={store} />
+			<VisibileTodoList store={store} />
+			<Footer store={store} />
 		</div>
 	);
 }
 
 const render = () => {
-	const state: AppState = store.getState();
 	ReactDOM.render(
-		<TodoApp />,
+		<TodoApp store={createStore(todoApp) as Store<TodoAppState>} />,
 		document.getElementById('todos'));
 }
 
-const store = createStore(todoApp);
-store.subscribe(render);
 render();
