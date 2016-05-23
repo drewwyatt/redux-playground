@@ -68,6 +68,11 @@ const visibilityFilter = (state: string = 'SHOW_ALL', action: TodoAction): any =
 	}
 }
 
+interface TodoAppState {
+	todos: Todo[];
+	visibilityFilter: 'SHOW_ALL' | 'SHOW_ACTIVE' | 'SHOW_COMPLETED';
+}
+
 const todoApp = combineReducers({
 	todos,
 	visibilityFilter
@@ -114,7 +119,7 @@ class VisibileTodoList extends React.Component<void, void> {
 	}
 	
 	render() {
-		const state = store.getState() as TodoAppProps;
+		const state = store.getState() as TodoAppState;
 		
 		return (
 			<TodoList 
@@ -160,7 +165,7 @@ class FilterLink extends React.Component<FilterLinkProps, void> {
 	
 	render(): JSX.Element {
 		const props = this.props;
-		const state: TodoAppProps = store.getState() as TodoAppProps;
+		const state: TodoAppState = store.getState() as TodoAppState;
 		
 		return (
 			<Link active={props.filter === state.visibilityFilter} onClick={() => store.dispatch({type: TodoActionType.SET_VISIBILITY_FILTER, filter: props.filter})}>
@@ -170,16 +175,14 @@ class FilterLink extends React.Component<FilterLinkProps, void> {
 	}
 }
 
-interface AddTodoProps {
-	onAddClick(text: string): void;
-}
-const AddTodo = ({onAddClick}: AddTodoProps): JSX.Element => {
+let nextTodoID = 0;
+const AddTodo = (): JSX.Element => {
 	let input: HTMLInputElement;
 	return (
 		<div>
 			<input ref={ node => input = node } />
 			<button onClick={() => {
-				onAddClick(input.value);
+				store.dispatch({type: TodoActionType.ADD_TODO, id: nextTodoID++, text: input.value});
 				input.value = '';
 			} }>
 				Add Todo
@@ -212,16 +215,10 @@ const Footer = (): JSX.Element => {
 	);
 }
 
-interface TodoAppProps {
-	todos: Todo[],
-	visibilityFilter: string
-}
-let nextTodoID = 0;
-const TodoApp = ({todos, visibilityFilter}: TodoAppProps): JSX.Element => {
+const TodoApp = (): JSX.Element => {
 	return (
 		<div>
-			<AddTodo
-				onAddClick={text => store.dispatch({ type: TodoActionType.ADD_TODO, id: nextTodoID++, text: text }) } />
+			<AddTodo />
 			<VisibileTodoList />
 			<Footer />
 		</div>
@@ -231,9 +228,7 @@ const TodoApp = ({todos, visibilityFilter}: TodoAppProps): JSX.Element => {
 const render = () => {
 	const state: AppState = store.getState();
 	ReactDOM.render(
-		<TodoApp
-			todos={state.todos}
-			visibilityFilter={state.visibilityFilter} />,
+		<TodoApp />,
 		document.getElementById('todos'));
 }
 
