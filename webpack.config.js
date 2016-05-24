@@ -8,7 +8,7 @@ module.exports = {
             'react',
             'react-dom',
             'redux',
-            'deep-freeze'
+            'react-redux'
         ],
         'counter': './src/counter/index.tsx',
         'counters': './src/counters/index.tsx',
