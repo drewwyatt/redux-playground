@@ -120,32 +120,7 @@ const mapDispatchToProps = (dispatch: (action: any) => void): any => {
 	}
 };
 
-const VisibileTodoList = connect(mapStateToProps, mapDispatchToProps)(TodoList);
-
-// class VisibileTodoList extends React.Component<TodoAppProps, void> {
-// 	private _unsubscribe: () => void;
-	
-// 	componentDidMount(): void {
-// 		const { store } = this.props;
-// 		this._unsubscribe = store.subscribe(() => this.forceUpdate());
-// 	}
-	
-// 	componentWillUnmount(): void {
-// 		this._unsubscribe();
-// 	}
-	
-// 	render() {
-// 		const { store } = this.props;
-// 		const state = store.getState() as TodoAppState;
-		
-// 		return (
-// 			<TodoList 
-				// todos={getVisibleTodos(state.todos, state.visibilityFilter)}
-				// onTodoClick={ (id) => dispatch({type: TodoActionType.TOGGLE_TODO, id})} />
-// 		);
-// 	}
-// }
-
+const VisibileTodoList  = connect(mapStateToProps, mapDispatchToProps)(TodoList) as React.ComponentClass<TodoAppProps>;
 
 interface LinkProps {
 	active: any;
